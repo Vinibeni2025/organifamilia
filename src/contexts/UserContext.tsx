@@ -21,6 +21,18 @@ interface UserContextType {
     podes: boolean;
   };
   toggleSection: (section: string) => void;
+  getWeeklyStats: () => {
+    agua: number;
+    cigarros: number;
+    refeicoes: number;
+    podes: number;
+  };
+  getDailyProgress: () => {
+    agua: number;
+    cigarros: number;
+    refeicoes: number;
+    podes: number;
+  };
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -122,13 +134,44 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return historico;
   };
 
+  const getWeeklyStats = () => {
+    const weekData = getHistorico(7);
+    return weekData.reduce(
+      (acc, day) => ({
+        agua: acc.agua + day.agua,
+        cigarros: acc.cigarros + day.cigarros,
+        refeicoes: acc.refeicoes + day.refeicoes.medias + day.refeicoes.grandes,
+        podes: acc.podes + day.podes
+      }),
+      { agua: 0, cigarros: 0, refeicoes: 0, podes: 0 }
+    );
+  };
+
+  const getDailyProgress = () => {
+    const metas = {
+      agua: 2000, // 2L
+      cigarros: 0, // ideal seria 0
+      refeicoes: 3, // 3 refeições por dia
+      podes: 500 // meta de 500 podes
+    };
+
+    return {
+      agua: Math.min((currentData.agua / metas.agua) * 100, 100),
+      cigarros: currentData.cigarros === 0 ? 100 : Math.max(100 - (currentData.cigarros * 20), 0),
+      refeicoes: Math.min(((currentData.refeicoes.medias + currentData.refeicoes.grandes) / metas.refeicoes) * 100, 100),
+      podes: Math.min((currentData.podes / metas.podes) * 100, 100)
+    };
+  };
+
   return (
     <UserContext.Provider value={{
       currentData,
       updateData,
       getHistorico,
       sectionsEnabled,
-      toggleSection
+      toggleSection,
+      getWeeklyStats,
+      getDailyProgress
     }}>
       {children}
     </UserContext.Provider>

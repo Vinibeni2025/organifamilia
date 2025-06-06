@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from '@/hooks/use-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 
 interface LoginFormProps {
   onLogin: () => void;
@@ -12,72 +12,68 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    // Simula verificação de login
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
+    
+    // Credenciais mockadas
     if (username === 'Vinícius' && password === 'dabdabdab1') {
-      toast({
-        title: "Login realizado com sucesso!",
-        description: "Bem-vindo ao Login Master",
-      });
+      setError('');
       onLogin();
     } else {
-      toast({
-        title: "Erro no login",
-        description: "Usuário ou senha incorretos",
-        variant: "destructive",
-      });
+      setError('Usuário ou senha incorretos');
     }
-
-    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-gray-800">🛡️ Login Master</CardTitle>
-          <CardDescription>Acesso seguro ao seu dashboard</CardDescription>
+          <CardTitle className="text-2xl font-bold">🛡️ Login Master</CardTitle>
+          <p className="text-gray-600">Acesso Seguro ao Dashboard</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            <div className="space-y-2">
+              <Label htmlFor="username">Usuário</Label>
               <Input
+                id="username"
                 type="text"
-                placeholder="Usuário"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full"
+                placeholder="Digite seu usuário"
                 required
               />
             </div>
-            <div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Senha</Label>
               <Input
+                id="password"
                 type="password"
-                placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full"
+                placeholder="Digite sua senha"
                 required
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Entrando...' : 'Entrar'}
+
+            {error && (
+              <div className="text-red-600 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full">
+              Entrar
             </Button>
           </form>
+
           <div className="mt-6 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <p><strong>Usuário:</strong> Vinícius</p>
-            <p><strong>Senha:</strong> dabdabdab1</p>
+            <div className="font-semibold mb-1">Credenciais de acesso:</div>
+            <div>Usuário: <code className="bg-white px-1 rounded">Vinícius</code></div>
+            <div>Senha: <code className="bg-white px-1 rounded">dabdabdab1</code></div>
           </div>
         </CardContent>
       </Card>

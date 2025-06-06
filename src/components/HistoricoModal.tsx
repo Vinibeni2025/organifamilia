@@ -9,14 +9,19 @@ interface HistoricoModalProps {
 }
 
 const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
-  const { getHistorico } = useUser();
+  const { getHistorico, getWeeklyStats } = useUser();
   const [periodo, setPeriodo] = useState<7 | 15 | 30>(7);
 
   const historico = getHistorico(periodo);
+  const weeklyStats = getWeeklyStats();
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    return date.toLocaleDateString('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit',
+      weekday: 'short'
+    });
   };
 
   const calcularTotais = () => {
@@ -31,13 +36,24 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
     );
   };
 
+  const calcularMedias = () => {
+    const totais = calcularTotais();
+    return {
+      agua: Math.round(totais.agua / periodo),
+      cigarros: Math.round((totais.cigarros / periodo) * 10) / 10,
+      refeicoes: Math.round((totais.refeicoes / periodo) * 10) / 10,
+      podes: Math.round(totais.podes / periodo)
+    };
+  };
+
   const totais = calcularTotais();
+  const medias = calcularMedias();
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b flex justify-between items-center">
-          <h2 className="text-2xl font-bold">📊 Histórico</h2>
+          <h2 className="text-2xl font-bold">📊 Histórico e Estatísticas</h2>
           <Button variant="outline" onClick={onClose}>
             Fechar
           </Button>
@@ -59,30 +75,65 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Resumo dos totais */}
+          {/* Estatísticas da semana atual */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>📈 Resumo da Semana (últimos 7 dias)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="text-center p-3 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{weeklyStats.agua}ml</div>
+                  <div className="text-sm text-gray-500">Água total</div>
+                  <div className="text-xs text-gray-400">Média: {Math.round(weeklyStats.agua/7)}ml/dia</div>
+                </div>
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <div className="text-2xl font-bold text-orange-600">{weeklyStats.cigarros}</div>
+                  <div className="text-sm text-gray-500">Cigarros</div>
+                  <div className="text-xs text-gray-400">Média: {Math.round((weeklyStats.cigarros/7)*10)/10}/dia</div>
+                </div>
+                <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{weeklyStats.refeicoes}</div>
+                  <div className="text-sm text-gray-500">Refeições</div>
+                  <div className="text-xs text-gray-400">Média: {Math.round((weeklyStats.refeicoes/7)*10)/10}/dia</div>
+                </div>
+                <div className="text-center p-3 bg-purple-50 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-600">{weeklyStats.podes}</div>
+                  <div className="text-sm text-gray-500">Podes</div>
+                  <div className="text-xs text-gray-400">Média: {Math.round(weeklyStats.podes/7)}/dia</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Resumo do período selecionado */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">{totais.agua}ml</div>
                 <div className="text-sm text-gray-500">Água total</div>
+                <div className="text-xs text-blue-500">Média: {medias.agua}ml/dia</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-orange-600">{totais.cigarros}</div>
                 <div className="text-sm text-gray-500">Cigarros</div>
+                <div className="text-xs text-orange-500">Média: {medias.cigarros}/dia</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">{totais.refeicoes}</div>
                 <div className="text-sm text-gray-500">Refeições</div>
+                <div className="text-xs text-green-500">Média: {medias.refeicoes}/dia</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-purple-600">{totais.podes}</div>
                 <div className="text-sm text-gray-500">Podes</div>
+                <div className="text-xs text-purple-500">Média: {medias.podes}/dia</div>
               </CardContent>
             </Card>
           </div>
@@ -90,7 +141,7 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
           {/* Histórico detalhado */}
           <Card>
             <CardHeader>
-              <CardTitle>Histórico Detalhado - {periodo} dias</CardTitle>
+              <CardTitle>🗓️ Histórico Detalhado - {periodo} dias</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -102,6 +153,7 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
                       <th className="text-center p-2">🚬 Cigarros</th>
                       <th className="text-center p-2">🍽️ Refeições</th>
                       <th className="text-center p-2">👟 Podes</th>
+                      <th className="text-left p-2">📝 Notas</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -117,6 +169,15 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
                           </span>
                         </td>
                         <td className="text-center p-2">{day.podes}</td>
+                        <td className="p-2 text-xs max-w-40">
+                          {day.notas ? (
+                            <span className="text-gray-600 truncate block" title={day.notas}>
+                              {day.notas}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

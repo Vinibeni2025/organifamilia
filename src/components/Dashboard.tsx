@@ -8,6 +8,8 @@ import AguaSection from './sections/AguaSection';
 import CigarrosSection from './sections/CigarrosSection';
 import RefeicoesSection from './sections/RefeicoesSection';
 import PodesSection from './sections/PodesSection';
+import NotasSection from './NotasSection';
+import ProgressSection from './ProgressSection';
 import HistoricoModal from './HistoricoModal';
 
 interface DashboardProps {
@@ -46,7 +48,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           <div className="flex justify-between items-center h-16">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">🛡️ Login Master</h1>
-              <p className="text-sm text-gray-500">Dashboard Pessoal</p>
+              <p className="text-sm text-gray-500">Dashboard Pessoal - Vinícius</p>
             </div>
             <div className="flex items-center gap-4">
               <Button 
@@ -100,12 +102,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           </CardContent>
         </Card>
 
-        {/* Seções Ativas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Progresso Diário */}
+        <div className="mb-6">
+          <ProgressSection />
+        </div>
+
+        {/* Seções Principais */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {sectionsEnabled.agua && <AguaSection />}
           {sectionsEnabled.cigarros && <CigarrosSection />}
           {sectionsEnabled.refeicoes && <RefeicoesSection />}
           {sectionsEnabled.podes && <PodesSection />}
+        </div>
+
+        {/* Notas */}
+        <div className="mb-6">
+          <NotasSection />
         </div>
 
         {/* Botão móvel para histórico */}
