@@ -30,9 +30,9 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
         agua: acc.agua + day.agua,
         cigarros: acc.cigarros + day.cigarros,
         refeicoes: acc.refeicoes + day.refeicoes.medias + day.refeicoes.grandes,
-        podes: acc.podes + day.podes
+        polichinelos: acc.polichinelos + day.polichinelos
       }),
-      { agua: 0, cigarros: 0, refeicoes: 0, podes: 0 }
+      { agua: 0, cigarros: 0, refeicoes: 0, polichinelos: 0 }
     );
   };
 
@@ -42,7 +42,7 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
       agua: Math.round(totais.agua / periodo),
       cigarros: Math.round((totais.cigarros / periodo) * 10) / 10,
       refeicoes: Math.round((totais.refeicoes / periodo) * 10) / 10,
-      podes: Math.round(totais.podes / periodo)
+      polichinelos: Math.round(totais.polichinelos / periodo)
     };
   };
 
@@ -98,9 +98,9 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
                   <div className="text-xs text-gray-400">Média: {Math.round((weeklyStats.refeicoes/7)*10)/10}/dia</div>
                 </div>
                 <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{weeklyStats.podes}</div>
-                  <div className="text-sm text-gray-500">Podes</div>
-                  <div className="text-xs text-gray-400">Média: {Math.round(weeklyStats.podes/7)}/dia</div>
+                  <div className="text-2xl font-bold text-purple-600">{weeklyStats.polichinelos}</div>
+                  <div className="text-sm text-gray-500">Polichinelos</div>
+                  <div className="text-xs text-gray-400">Média: {Math.round(weeklyStats.polichinelos/7)}/dia</div>
                 </div>
               </div>
             </CardContent>
@@ -131,9 +131,9 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-600">{totais.podes}</div>
-                <div className="text-sm text-gray-500">Podes</div>
-                <div className="text-xs text-purple-500">Média: {medias.podes}/dia</div>
+                <div className="text-2xl font-bold text-purple-600">{totais.polichinelos}</div>
+                <div className="text-sm text-gray-500">Polichinelos</div>
+                <div className="text-xs text-purple-500">Média: {medias.polichinelos}/dia</div>
               </CardContent>
             </Card>
           </div>
@@ -152,7 +152,7 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
                       <th className="text-center p-2">💧 Água</th>
                       <th className="text-center p-2">🚬 Cigarros</th>
                       <th className="text-center p-2">🍽️ Refeições</th>
-                      <th className="text-center p-2">👟 Podes</th>
+                      <th className="text-center p-2">👟 Polichinelos</th>
                       <th className="text-left p-2">📝 Notas</th>
                     </tr>
                   </thead>
@@ -168,7 +168,7 @@ const HistoricoModal: React.FC<HistoricoModalProps> = ({ onClose }) => {
                             ({day.refeicoes.medias}M/{day.refeicoes.grandes}G)
                           </span>
                         </td>
-                        <td className="text-center p-2">{day.podes}</td>
+                        <td className="text-center p-2">{day.polichinelos}</td>
                         <td className="p-2 text-xs max-w-40">
                           {day.notas ? (
                             <span className="text-gray-600 truncate block" title={day.notas}>
