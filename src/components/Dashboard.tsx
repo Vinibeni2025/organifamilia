@@ -10,6 +10,7 @@ import RefeicoesSection from './sections/RefeicoesSection';
 import PolichinelosSection from './sections/PolichinelosSection';
 import NotasSection from './NotasSection';
 import ProgressSection from './ProgressSection';
+import ShoppingListSection from './ShoppingListSection';
 import HistoricoModal from './HistoricoModal';
 import MetricsPage from './MetricsPage';
 
@@ -95,6 +96,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           {sectionsEnabled.cigarros && <CigarrosSection />}
           {sectionsEnabled.refeicoes && <RefeicoesSection />}
           {sectionsEnabled.polichinelos && <PolichinelosSection />}
+        </div>
+
+        {/* Lista de Compras */}
+        <div className="mb-6">
+          <ShoppingListSection />
         </div>
 
         {/* Notas */}

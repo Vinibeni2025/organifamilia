@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface DailyData {
@@ -7,6 +8,18 @@ interface DailyData {
   refeicoes: { medias: number; grandes: number };
   polichinelos: number;
   notas?: string;
+}
+
+interface ShoppingItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  dateAdded: string;
+}
+
+interface MonthlyShoppingList {
+  month: string; // formato: "2024-01"
+  items: ShoppingItem[];
 }
 
 interface UserContextType {
@@ -37,6 +50,11 @@ interface UserContextType {
     cigarros: { message: string; color: string };
     polichinelos: { message: string; color: string };
   };
+  // Shopping list functions
+  getCurrentMonthShoppingList: () => MonthlyShoppingList;
+  addShoppingItem: (text: string) => void;
+  toggleShoppingItem: (itemId: string) => void;
+  removeShoppingItem: (itemId: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -51,6 +69,7 @@ export const useUser = () => {
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const today = new Date().toISOString().split('T')[0];
+  const currentMonth = new Date().toISOString().slice(0, 7); // "2024-01"
   
   const [currentData, setCurrentData] = useState<DailyData>({
     date: today,
@@ -236,6 +255,62 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return suggestions;
   };
 
+  // Shopping list functions
+  const getCurrentMonthShoppingList = (): MonthlyShoppingList => {
+    const saved = localStorage.getItem(`loginMaster_shopping_${currentMonth}`);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    
+    return {
+      month: currentMonth,
+      items: []
+    };
+  };
+
+  const addShoppingItem = (text: string) => {
+    const currentList = getCurrentMonthShoppingList();
+    const newItem: ShoppingItem = {
+      id: Date.now().toString(),
+      text: text.trim(),
+      completed: false,
+      dateAdded: new Date().toISOString()
+    };
+    
+    const updatedList = {
+      ...currentList,
+      items: [...currentList.items, newItem]
+    };
+    
+    localStorage.setItem(`loginMaster_shopping_${currentMonth}`, JSON.stringify(updatedList));
+  };
+
+  const toggleShoppingItem = (itemId: string) => {
+    const currentList = getCurrentMonthShoppingList();
+    const updatedItems = currentList.items.map(item =>
+      item.id === itemId ? { ...item, completed: !item.completed } : item
+    );
+    
+    const updatedList = {
+      ...currentList,
+      items: updatedItems
+    };
+    
+    localStorage.setItem(`loginMaster_shopping_${currentMonth}`, JSON.stringify(updatedList));
+  };
+
+  const removeShoppingItem = (itemId: string) => {
+    const currentList = getCurrentMonthShoppingList();
+    const updatedItems = currentList.items.filter(item => item.id !== itemId);
+    
+    const updatedList = {
+      ...currentList,
+      items: updatedItems
+    };
+    
+    localStorage.setItem(`loginMaster_shopping_${currentMonth}`, JSON.stringify(updatedList));
+  };
+
   return (
     <UserContext.Provider value={{
       currentData,
@@ -245,7 +320,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toggleSection,
       getWeeklyStats,
       getDailyProgress,
-      getSuggestions
+      getSuggestions,
+      getCurrentMonthShoppingList,
+      addShoppingItem,
+      toggleShoppingItem,
+      removeShoppingItem
     }}>
       {children}
     </UserContext.Provider>
