@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface DailyData {
@@ -6,7 +5,7 @@ interface DailyData {
   agua: number; // em ml
   cigarros: number;
   refeicoes: { medias: number; grandes: number };
-  podes: number;
+  polichinelos: number;
   notas?: string;
 }
 
@@ -18,20 +17,25 @@ interface UserContextType {
     agua: boolean;
     cigarros: boolean;
     refeicoes: boolean;
-    podes: boolean;
+    polichinelos: boolean;
   };
   toggleSection: (section: string) => void;
   getWeeklyStats: () => {
     agua: number;
     cigarros: number;
     refeicoes: number;
-    podes: number;
+    polichinelos: number;
   };
   getDailyProgress: () => {
     agua: number;
     cigarros: number;
     refeicoes: number;
-    podes: number;
+    polichinelos: number;
+  };
+  getSuggestions: () => {
+    agua: { message: string; color: string };
+    cigarros: { message: string; color: string };
+    polichinelos: { message: string; color: string };
   };
 }
 
@@ -53,7 +57,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     agua: 0,
     cigarros: 0,
     refeicoes: { medias: 0, grandes: 0 },
-    podes: 0,
+    polichinelos: 0,
     notas: ''
   });
 
@@ -61,7 +65,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     agua: true,
     cigarros: true,
     refeicoes: true,
-    podes: true
+    polichinelos: true
   });
 
   useEffect(() => {
@@ -91,8 +95,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       case 'refeicoes':
         newData.refeicoes = { ...newData.refeicoes, ...value };
         break;
-      case 'podes':
-        newData.podes += value;
+      case 'polichinelos':
+        newData.polichinelos += value;
         break;
       case 'notas':
         newData.notas = value;
@@ -126,7 +130,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           agua: 0,
           cigarros: 0,
           refeicoes: { medias: 0, grandes: 0 },
-          podes: 0
+          polichinelos: 0
         });
       }
     }
@@ -141,9 +145,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         agua: acc.agua + day.agua,
         cigarros: acc.cigarros + day.cigarros,
         refeicoes: acc.refeicoes + day.refeicoes.medias + day.refeicoes.grandes,
-        podes: acc.podes + day.podes
+        polichinelos: acc.polichinelos + day.polichinelos
       }),
-      { agua: 0, cigarros: 0, refeicoes: 0, podes: 0 }
+      { agua: 0, cigarros: 0, refeicoes: 0, polichinelos: 0 }
     );
   };
 
@@ -152,15 +156,84 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       agua: 2000, // 2L
       cigarros: 0, // ideal seria 0
       refeicoes: 3, // 3 refeições por dia
-      podes: 500 // meta de 500 podes
+      polichinelos: 500 // meta de 500 polichinelos
     };
 
     return {
       agua: Math.min((currentData.agua / metas.agua) * 100, 100),
       cigarros: currentData.cigarros === 0 ? 100 : Math.max(100 - (currentData.cigarros * 20), 0),
       refeicoes: Math.min(((currentData.refeicoes.medias + currentData.refeicoes.grandes) / metas.refeicoes) * 100, 100),
-      podes: Math.min((currentData.podes / metas.podes) * 100, 100)
+      polichinelos: Math.min((currentData.polichinelos / metas.polichinelos) * 100, 100)
     };
+  };
+
+  const getSuggestions = () => {
+    const weekData = getHistorico(7);
+    const avgCigarros = weekData.reduce((acc, day) => acc + day.cigarros, 0) / 7;
+    const avgAgua = weekData.reduce((acc, day) => acc + day.agua, 0) / 7;
+    
+    const suggestions = {
+      agua: { message: '', color: '' },
+      cigarros: { message: '', color: '' },
+      polichinelos: { message: '', color: '' }
+    };
+
+    // Sugestões para água
+    if (currentData.agua >= 2000) {
+      suggestions.agua = { 
+        message: "🎉 Excelente! Você atingiu sua meta de hidratação hoje!", 
+        color: "text-green-600" 
+      };
+    } else if (currentData.agua >= 1500) {
+      suggestions.agua = { 
+        message: "💪 Quase lá! Faltam apenas " + (2000 - currentData.agua) + "ml para sua meta!", 
+        color: "text-blue-600" 
+      };
+    } else {
+      suggestions.agua = { 
+        message: "💧 Hidrate-se! Beba mais água para atingir os 2L diários.", 
+        color: "text-orange-600" 
+      };
+    }
+
+    // Sugestões para cigarros
+    const targetCigarros = Math.max(0, Math.floor(avgCigarros - 0.2)); // Reduzir 1 a cada 5 dias
+    if (currentData.cigarros === 0) {
+      suggestions.cigarros = { 
+        message: "🌟 Perfeito! Dia livre de cigarros. Continue assim!", 
+        color: "text-green-600" 
+      };
+    } else if (currentData.cigarros <= targetCigarros) {
+      suggestions.cigarros = { 
+        message: "👍 Você está progredindo! Reduzindo gradualmente é o caminho.", 
+        color: "text-blue-600" 
+      };
+    } else {
+      suggestions.cigarros = { 
+        message: "⚠️ Tente reduzir gradualmente. Meta: máximo " + targetCigarros + " por dia.", 
+        color: "text-red-600" 
+      };
+    }
+
+    // Sugestões para polichinelos
+    if (currentData.polichinelos >= 500) {
+      suggestions.polichinelos = { 
+        message: "🚀 Incrível! Você superou a meta de aquecimento hoje!", 
+        color: "text-purple-600" 
+      };
+    } else if (currentData.polichinelos >= 250) {
+      suggestions.polichinelos = { 
+        message: "🔥 Bom ritmo! Continue se aquecendo para atingir os 500.", 
+        color: "text-orange-600" 
+      };
+    } else {
+      suggestions.polichinelos = { 
+        message: "👟 Comece a se aquecer! Faça alguns polichinelos para ativar o corpo.", 
+        color: "text-gray-600" 
+      };
+    }
+
+    return suggestions;
   };
 
   return (
@@ -171,7 +244,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sectionsEnabled,
       toggleSection,
       getWeeklyStats,
-      getDailyProgress
+      getDailyProgress,
+      getSuggestions
     }}>
       {children}
     </UserContext.Provider>

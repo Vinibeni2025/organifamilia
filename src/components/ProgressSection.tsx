@@ -30,10 +30,10 @@ const ProgressSection = () => {
       color: 'bg-orange-500' 
     },
     { 
-      name: 'Podes', 
-      value: progress.podes, 
+      name: 'Polichinelos', 
+      value: progress.polichinelos, 
       icon: '👟', 
-      enabled: sectionsEnabled.podes,
+      enabled: sectionsEnabled.polichinelos,
       color: 'bg-purple-500' 
     }
   ].filter(item => item.enabled);
@@ -75,7 +75,7 @@ const ProgressSection = () => {
             {sectionsEnabled.agua && <div>💧 Água: 2000ml</div>}
             {sectionsEnabled.cigarros && <div>🚬 Cigarros: 0</div>}
             {sectionsEnabled.refeicoes && <div>🍽️ Refeições: 3</div>}
-            {sectionsEnabled.podes && <div>👟 Podes: 500</div>}
+            {sectionsEnabled.polichinelos && <div>👟 Polichinelos: 500</div>}
           </div>
         </div>
       </CardContent>

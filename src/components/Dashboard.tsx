@@ -7,10 +7,11 @@ import { useUser } from '@/contexts/UserContext';
 import AguaSection from './sections/AguaSection';
 import CigarrosSection from './sections/CigarrosSection';
 import RefeicoesSection from './sections/RefeicoesSection';
-import PodesSection from './sections/PodesSection';
+import PolichinelosSection from './sections/PolichinelosSection';
 import NotasSection from './NotasSection';
 import ProgressSection from './ProgressSection';
 import HistoricoModal from './HistoricoModal';
+import MetricsPage from './MetricsPage';
 
 interface DashboardProps {
   onLogout: () => void;
@@ -19,6 +20,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const { sectionsEnabled, toggleSection } = useUser();
   const [showHistorico, setShowHistorico] = useState(false);
+  const [currentPage, setCurrentPage] = useState('inicio'); // 'inicio' ou 'metricas'
 
   const formatDate = () => {
     const now = new Date();
@@ -40,33 +42,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">🛡️ Login Master</h1>
-              <p className="text-sm text-gray-500">Dashboard Pessoal - Vinícius</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowHistorico(true)}
-                className="hidden sm:inline-flex"
-              >
-                📊 Histórico
-              </Button>
-              <Button variant="outline" onClick={onLogout}>
-                Sair
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+  const renderContent = () => {
+    if (currentPage === 'metricas') {
+      return <MetricsPage />;
+    }
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    return (
+      <>
         {/* Data e Hora */}
         <Card className="mb-8 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
           <CardContent className="p-6">
@@ -90,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                     {section === 'agua' && '💧 Água'}
                     {section === 'cigarros' && '🚬 Cigarros'}
                     {section === 'refeicoes' && '🍽️ Refeições'}
-                    {section === 'podes' && '👟 Podes'}
+                    {section === 'polichinelos' && '👟 Polichinelos'}
                   </span>
                   <Switch
                     checked={enabled}
@@ -112,13 +94,89 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           {sectionsEnabled.agua && <AguaSection />}
           {sectionsEnabled.cigarros && <CigarrosSection />}
           {sectionsEnabled.refeicoes && <RefeicoesSection />}
-          {sectionsEnabled.podes && <PodesSection />}
+          {sectionsEnabled.polichinelos && <PolichinelosSection />}
         </div>
 
         {/* Notas */}
         <div className="mb-6">
           <NotasSection />
         </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">🛡️ Login Master</h1>
+              <p className="text-sm text-gray-500">Dashboard Pessoal - Vinícius</p>
+            </div>
+            
+            {/* Menu de Navegação */}
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+                <Button
+                  variant={currentPage === 'inicio' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentPage('inicio')}
+                  className="px-4"
+                >
+                  🏠 Início
+                </Button>
+                <Button
+                  variant={currentPage === 'metricas' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentPage('metricas')}
+                  className="px-4"
+                >
+                  📊 Métricas
+                </Button>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                onClick={() => setShowHistorico(true)}
+                className="hidden sm:inline-flex"
+              >
+                📈 Histórico
+              </Button>
+              
+              <Button variant="outline" onClick={onLogout}>
+                Sair
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Menu Mobile */}
+      <div className="sm:hidden bg-white border-b">
+        <div className="flex justify-center gap-1 p-2">
+          <Button
+            variant={currentPage === 'inicio' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setCurrentPage('inicio')}
+            className="flex-1"
+          >
+            🏠 Início
+          </Button>
+          <Button
+            variant={currentPage === 'metricas' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setCurrentPage('metricas')}
+            className="flex-1"
+          >
+            📊 Métricas
+          </Button>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {renderContent()}
 
         {/* Botão móvel para histórico */}
         <div className="fixed bottom-6 right-6 sm:hidden">
@@ -126,7 +184,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             onClick={() => setShowHistorico(true)}
             className="rounded-full w-14 h-14 bg-blue-600 hover:bg-blue-700 shadow-lg"
           >
-            📊
+            📈
           </Button>
         </div>
       </div>
