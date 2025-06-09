@@ -5,14 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/useCustomAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 const AuthPage = () => {
   const { signIn, signUp } = useAuth();
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ 
-    username: '', 
+    email: '', 
     password: '', 
+    username: '', 
     fullName: '' 
   });
   const [error, setError] = useState('');
@@ -23,10 +24,10 @@ const AuthPage = () => {
     setLoading(true);
     setError('');
     
-    const { error } = await signIn(loginData.username, loginData.password);
+    const { error } = await signIn(loginData.email, loginData.password);
     
     if (error) {
-      setError(error.message || 'Usuário ou senha incorretos');
+      setError('Email ou senha incorretos');
     }
     
     setLoading(false);
@@ -38,13 +39,14 @@ const AuthPage = () => {
     setError('');
     
     const { error } = await signUp(
-      signupData.username, 
+      signupData.email, 
       signupData.password, 
+      signupData.username, 
       signupData.fullName
     );
     
     if (error) {
-      setError(error.message || 'Erro ao criar conta');
+      setError('Erro ao criar conta: ' + error.message);
     }
     
     setLoading(false);
@@ -67,13 +69,13 @@ const AuthPage = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Nome de usuário</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="username"
-                    type="text"
-                    value={loginData.username}
-                    onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                    placeholder="Digite seu nome de usuário"
+                    id="email"
+                    type="email"
+                    value={loginData.email}
+                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                    placeholder="Digite seu email"
                     required
                   />
                 </div>
@@ -100,16 +102,6 @@ const AuthPage = () => {
                   {loading ? 'Entrando...' : 'Entrar'}
                 </Button>
               </form>
-
-              <div className="mt-6 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-                <div className="font-semibold mb-1">Usuários de teste:</div>
-                <div className="space-y-1">
-                  <div><strong>vinicius2025</strong> / juntoftn1</div>
-                  <div><strong>mariana</strong> / junto123</div>
-                  <div><strong>emanuel</strong> / junto567</div>
-                  <div><strong>bruna</strong> / junto890</div>
-                </div>
-              </div>
             </TabsContent>
             
             <TabsContent value="signup">
@@ -121,7 +113,7 @@ const AuthPage = () => {
                     type="text"
                     value={signupData.username}
                     onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
-                    placeholder="Ex: usuario123"
+                    placeholder="Ex: vinicius2025"
                     required
                   />
                 </div>
@@ -134,6 +126,18 @@ const AuthPage = () => {
                     value={signupData.fullName}
                     onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                     placeholder="Digite seu nome completo"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+                    placeholder="Digite seu email"
                     required
                   />
                 </div>

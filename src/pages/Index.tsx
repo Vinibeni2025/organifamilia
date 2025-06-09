@@ -1,5 +1,5 @@
 
-import { useAuth } from '@/hooks/useCustomAuth';
+import { useAuth } from '@/hooks/useAuth';
 import AuthPage from '@/components/AuthPage';
 import Dashboard from '@/components/Dashboard';
 
