@@ -57,7 +57,7 @@ const AuthPage = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">🛡️ Organização Angular 1.0</CardTitle>
-          <p className="text-gray-600">Sistema de Gestão Pessoal</p>
+          <p className="text-gray-600">Sistema de organização com base Angular</p>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
