@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 import { useAuth } from '@/hooks/useCustomAuth';
+=======
+import { useAuth } from '@/hooks/useAuth';
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
 import AuthPage from '@/components/AuthPage';
 import Dashboard from '@/components/Dashboard';
 

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
 -- Criar tabela de perfis de usuário
 CREATE TABLE public.profiles (
   id uuid NOT NULL REFERENCES auth.users ON DELETE CASCADE,
@@ -172,6 +176,7 @@ $$;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+<<<<<<< HEAD
 
 -- Policy para permitir INSERT em profiles para todos (apenas para testes)
 CREATE POLICY "Allow insert for all"
@@ -179,3 +184,5 @@ ON public.profiles
 FOR INSERT
 TO public
 WITH CHECK (true);
+=======
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e

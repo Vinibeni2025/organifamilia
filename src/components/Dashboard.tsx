@@ -3,7 +3,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+<<<<<<< HEAD
 import { useAuth } from '@/hooks/useCustomAuth';
+=======
+import { useAuth } from '@/hooks/useAuth';
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
 import { useSupabaseData } from '@/hooks/useSupabaseData';
 import AguaSection from './sections/AguaSection';
 import CigarrosSection from './sections/CigarrosSection';
@@ -16,7 +20,11 @@ import HistoricoModal from './HistoricoModal';
 import MetricsPage from './MetricsPage';
 
 const Dashboard = () => {
+<<<<<<< HEAD
   const { user, signOut } = useAuth();
+=======
+  const { profile, signOut } = useAuth();
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
   const { sectionsEnabled, toggleSection, loading } = useSupabaseData();
   const [showHistorico, setShowHistorico] = useState(false);
   const [currentPage, setCurrentPage] = useState('inicio');
@@ -129,7 +137,11 @@ const Dashboard = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">🛡️ Organização Angular 1.0</h1>
               <p className="text-sm text-gray-500">
+<<<<<<< HEAD
                 Bem-vindo, {user?.full_name || user?.username}
+=======
+                Bem-vindo, {profile?.full_name || profile?.username}
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
               </p>
             </div>
             

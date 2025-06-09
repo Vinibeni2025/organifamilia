@@ -1,7 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+<<<<<<< HEAD
 import { useAuth } from './useCustomAuth';
+=======
+import { useAuth } from './useAuth';
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
 
 interface DailyData {
   id: string;

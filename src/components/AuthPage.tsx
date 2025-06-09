@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+<<<<<<< HEAD
 import { useAuth } from '@/hooks/useCustomAuth';
 
 const AuthPage = () => {
@@ -13,6 +14,17 @@ const AuthPage = () => {
   const [signupData, setSignupData] = useState({ 
     username: '', 
     password: '', 
+=======
+import { useAuth } from '@/hooks/useAuth';
+
+const AuthPage = () => {
+  const { signIn, signUp } = useAuth();
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [signupData, setSignupData] = useState({ 
+    email: '', 
+    password: '', 
+    username: '', 
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
     fullName: '' 
   });
   const [error, setError] = useState('');
@@ -23,10 +35,17 @@ const AuthPage = () => {
     setLoading(true);
     setError('');
     
+<<<<<<< HEAD
     const { error } = await signIn(loginData.username, loginData.password);
     
     if (error) {
       setError(error.message || 'Usuário ou senha incorretos');
+=======
+    const { error } = await signIn(loginData.email, loginData.password);
+    
+    if (error) {
+      setError('Email ou senha incorretos');
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
     }
     
     setLoading(false);
@@ -38,13 +57,23 @@ const AuthPage = () => {
     setError('');
     
     const { error } = await signUp(
+<<<<<<< HEAD
       signupData.username, 
       signupData.password, 
+=======
+      signupData.email, 
+      signupData.password, 
+      signupData.username, 
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
       signupData.fullName
     );
     
     if (error) {
+<<<<<<< HEAD
       setError(error.message || 'Erro ao criar conta');
+=======
+      setError('Erro ao criar conta: ' + error.message);
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
     }
     
     setLoading(false);
@@ -55,7 +84,11 @@ const AuthPage = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">🛡️ Organização Angular 1.0</CardTitle>
+<<<<<<< HEAD
           <p className="text-gray-600">Sistema de organização com base Angular</p>
+=======
+          <p className="text-gray-600">Sistema de Gestão Pessoal</p>
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
@@ -67,6 +100,7 @@ const AuthPage = () => {
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
+<<<<<<< HEAD
                   <Label htmlFor="username">Nome de usuário</Label>
                   <Input
                     id="username"
@@ -74,6 +108,15 @@ const AuthPage = () => {
                     value={loginData.username}
                     onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
                     placeholder="Digite seu nome de usuário"
+=======
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={loginData.email}
+                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                    placeholder="Digite seu email"
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
                     required
                   />
                 </div>
@@ -100,6 +143,7 @@ const AuthPage = () => {
                   {loading ? 'Entrando...' : 'Entrar'}
                 </Button>
               </form>
+<<<<<<< HEAD
 
               <div className="mt-6 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
                 <div className="font-semibold mb-1">Usuários de teste:</div>
@@ -110,6 +154,8 @@ const AuthPage = () => {
                   <div><strong>bruna</strong> / junto890</div>
                 </div>
               </div>
+=======
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
             </TabsContent>
             
             <TabsContent value="signup">
@@ -121,7 +167,11 @@ const AuthPage = () => {
                     type="text"
                     value={signupData.username}
                     onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
+<<<<<<< HEAD
                     placeholder="Ex: usuario123"
+=======
+                    placeholder="Ex: vinicius2025"
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
                     required
                   />
                 </div>
@@ -139,6 +189,21 @@ const AuthPage = () => {
                 </div>
                 
                 <div className="space-y-2">
+<<<<<<< HEAD
+=======
+                  <Label htmlFor="signup-email">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+                    placeholder="Digite seu email"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+>>>>>>> 6c1222520196260cabbb9b0cc5dfbd5944c51f3e
                   <Label htmlFor="signup-password">Senha</Label>
                   <Input
                     id="signup-password"
