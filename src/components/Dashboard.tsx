@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { useUser } from '@/contexts/UserContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useSupabaseData } from '@/hooks/useSupabaseData';
 import AguaSection from './sections/AguaSection';
 import CigarrosSection from './sections/CigarrosSection';
 import RefeicoesSection from './sections/RefeicoesSection';
@@ -14,14 +15,11 @@ import ShoppingListSection from './ShoppingListSection';
 import HistoricoModal from './HistoricoModal';
 import MetricsPage from './MetricsPage';
 
-interface DashboardProps {
-  onLogout: () => void;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
-  const { sectionsEnabled, toggleSection } = useUser();
+const Dashboard = () => {
+  const { profile, signOut } = useAuth();
+  const { sectionsEnabled, toggleSection, loading } = useSupabaseData();
   const [showHistorico, setShowHistorico] = useState(false);
-  const [currentPage, setCurrentPage] = useState('inicio'); // 'inicio' ou 'metricas'
+  const [currentPage, setCurrentPage] = useState('inicio');
 
   const formatDate = () => {
     const now = new Date();
@@ -42,6 +40,17 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       timeZone: 'America/Sao_Paulo'
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📊</div>
+          <p className="text-gray-600">Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     if (currentPage === 'metricas') {
@@ -118,8 +127,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">🛡️ Login Master</h1>
-              <p className="text-sm text-gray-500">Dashboard Pessoal - Vinícius</p>
+              <h1 className="text-2xl font-bold text-gray-900">🛡️ Organização Angular 1.0</h1>
+              <p className="text-sm text-gray-500">
+                Bem-vindo, {profile?.full_name || profile?.username}
+              </p>
             </div>
             
             {/* Menu de Navegação */}
@@ -151,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                 📈 Histórico
               </Button>
               
-              <Button variant="outline" onClick={onLogout}>
+              <Button variant="outline" onClick={signOut}>
                 Sair
               </Button>
             </div>

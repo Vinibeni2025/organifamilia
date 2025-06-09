@@ -1,39 +1,27 @@
 
-import { useState, useEffect } from 'react';
-import LoginForm from '@/components/LoginForm';
+import { useAuth } from '@/hooks/useAuth';
+import AuthPage from '@/components/AuthPage';
 import Dashboard from '@/components/Dashboard';
-import { UserProvider } from '@/contexts/UserContext';
 
 const Index = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    // Verifica se o usuário já está logado no localStorage
-    const loggedIn = localStorage.getItem('loginMaster_loggedIn');
-    if (loggedIn === 'true') {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem('loginMaster_loggedIn', 'true');
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem('loginMaster_loggedIn');
-  };
-
-  if (!isLoggedIn) {
-    return <LoginForm onLogin={handleLogin} />;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🛡️</div>
+          <p className="text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <UserProvider>
-      <Dashboard onLogout={handleLogout} />
-    </UserProvider>
-  );
+  if (!user) {
+    return <AuthPage />;
+  }
+
+  return <Dashboard />;
 };
 
 export default Index;

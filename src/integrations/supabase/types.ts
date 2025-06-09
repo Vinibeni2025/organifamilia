@@ -9,7 +9,182 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      daily_data: {
+        Row: {
+          agua: number | null
+          cigarros: number | null
+          created_at: string | null
+          date: string
+          id: string
+          notas: string | null
+          polichinelos: number | null
+          refeicoes_grandes: number | null
+          refeicoes_medias: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          agua?: number | null
+          cigarros?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          notas?: string | null
+          polichinelos?: number | null
+          refeicoes_grandes?: number | null
+          refeicoes_medias?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          agua?: number | null
+          cigarros?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          notas?: string | null
+          polichinelos?: number | null
+          refeicoes_grandes?: number | null
+          refeicoes_medias?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_data_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      shopping_items: {
+        Row: {
+          completed: boolean | null
+          date_added: string | null
+          id: string
+          shopping_list_id: string
+          text: string
+        }
+        Insert: {
+          completed?: boolean | null
+          date_added?: string | null
+          id?: string
+          shopping_list_id: string
+          text: string
+        }
+        Update: {
+          completed?: boolean | null
+          date_added?: string | null
+          id?: string
+          shopping_list_id?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shopping_items_shopping_list_id_fkey"
+            columns: ["shopping_list_id"]
+            isOneToOne: false
+            referencedRelation: "shopping_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shopping_lists: {
+        Row: {
+          created_at: string | null
+          id: string
+          month: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          month: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          month?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shopping_lists_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_sections: {
+        Row: {
+          agua: boolean | null
+          cigarros: boolean | null
+          created_at: string | null
+          id: string
+          polichinelos: boolean | null
+          refeicoes: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          agua?: boolean | null
+          cigarros?: boolean | null
+          created_at?: string | null
+          id?: string
+          polichinelos?: boolean | null
+          refeicoes?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          agua?: boolean | null
+          cigarros?: boolean | null
+          created_at?: string | null
+          id?: string
+          polichinelos?: boolean | null
+          refeicoes?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_sections_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
